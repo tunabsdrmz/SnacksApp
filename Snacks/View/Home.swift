@@ -9,7 +9,7 @@ import SwiftUI
 
 struct Home: View {
     @EnvironmentObject var cartManager:CartManager
-    @State var selectedCategory = "Choco"
+    @State var selectedCategory = "All"
     
     var body: some View {
         NavigationView {
@@ -33,7 +33,7 @@ struct Home: View {
                     CategoryListView
                     
                     HStack {
-                        Text("Choco **Collections**")
+                        Text("\(selectedCategory) **Collections**")
                             .font(.system(size: 24))
                         Spacer()
                         NavigationLink {
@@ -52,8 +52,13 @@ struct Home: View {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack {
                             ForEach(ProductList, id: \.id) {item in
-                                ProductCard(product: item)
-                                    .environmentObject(cartManager)
+                                if selectedCategory == "All" {
+                                    ProductCard(product: item)
+                                        .environmentObject(cartManager)
+                                } else if selectedCategory == item.category {
+                                    ProductCard(product: item)
+                                        .environmentObject(cartManager)
+                                }
                             }
                         }
                     }
@@ -155,6 +160,6 @@ struct ProductCard: View {
         .frame(width: 336, height: 422)
         .background(product.color.opacity(0.13))
         .clipShape(.rect(cornerRadius: 57))
-        .padding(.leading, 20)
+        .padding(.horizontal, 30)
     }
 }
